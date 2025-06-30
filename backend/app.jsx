@@ -286,32 +286,37 @@ app.post("/api/login", async (req, res) => {
 //Download route
 app.get("/api/reports/download", async (req, res) => {
   try {
-    const { range, format } = req.query;
+    const { range, format, start, end } = req.query;
     let startDate, endDate;
 
     const today = moment();
-    switch (range) {
-      case "week":
-        startDate = today.clone().startOf("week").format("YYYY-MM-DD");
-        endDate = today.clone().endOf("week").format("YYYY-MM-DD");
-        break;
-      case "month":
-        startDate = today.clone().startOf("month").format("YYYY-MM-DD");
-        endDate = today.clone().endOf("month").format("YYYY-MM-DD");
-        break;
-      case "year":
-        startDate = today.clone().startOf("year").format("YYYY-MM-DD");
-        endDate = today.clone().endOf("year").format("YYYY-MM-DD");
-        break;
-      default:
-        try {
-          const rangeObj = JSON.parse(range);
-          startDate = moment(rangeObj.start).format("YYYY-MM-DD");
-          endDate = moment(rangeObj.end).format("YYYY-MM-DD");
-        } catch (e) {
-          startDate = today.format("YYYY-MM-DD");
-          endDate = today.format("YYYY-MM-DD");
-        }
+    if (start && end) {
+      startDate = moment(start).format("YYYY-MM-DD");
+      endDate = moment(end).format("YYYY-MM-DD");
+    } else {
+      switch (range) {
+        case "week":
+          startDate = today.clone().startOf("week").format("YYYY-MM-DD");
+          endDate = today.clone().endOf("week").format("YYYY-MM-DD");
+          break;
+        case "month":
+          startDate = today.clone().startOf("month").format("YYYY-MM-DD");
+          endDate = today.clone().endOf("month").format("YYYY-MM-DD");
+          break;
+        case "year":
+          startDate = today.clone().startOf("year").format("YYYY-MM-DD");
+          endDate = today.clone().endOf("year").format("YYYY-MM-DD");
+          break;
+        default:
+          try {
+            const rangeObj = JSON.parse(range);
+            startDate = moment(rangeObj.start).format("YYYY-MM-DD");
+            endDate = moment(rangeObj.end).format("YYYY-MM-DD");
+          } catch (e) {
+            startDate = today.format("YYYY-MM-DD");
+            endDate = today.format("YYYY-MM-DD");
+          }
+      }
     }
 
     const listings = await Listing.find({

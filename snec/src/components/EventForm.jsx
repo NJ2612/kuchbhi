@@ -10,7 +10,7 @@ const EVENT_TYPES = [
   { value: 'sports', label: 'Sports' }
 ];
 
-export default function EventForm() {
+export default function EventForm({ onEventAdded }) {
   const [form, setForm] = useState({
     title: '', organizer: '', date: '', time: '', location: '', link: '', description: '', type: 'workshop'
   });
@@ -44,8 +44,8 @@ export default function EventForm() {
       if (!res.ok) throw new Error('Failed to submit event');
       alert('🎉 Event Submitted!');
       setForm({ title: '', organizer: '', date: '', time: '', location: '', link: '', description: '', type: 'workshop' });
+      if (onEventAdded) onEventAdded();
       navigate('/');
-      window.location.reload();
     } catch (err) {
       alert('Error: ' + err.message);
     }

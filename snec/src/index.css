@@ -491,7 +491,11 @@ border: 1px solid rgba(255, 255, 255, 0.45);
     border-radius: 12px;
     padding: 50px;
     padding-top: 50px;
-    height: 400px;
+    height: auto !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     width: 400px;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
     position: relative;
@@ -509,6 +513,10 @@ border: 1px solid rgba(255, 255, 255, 0.45);
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.modal-content::-webkit-scrollbar {
+    display: none;
 }
 
 .modal-content h3 {

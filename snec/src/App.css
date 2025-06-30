@@ -5,7 +5,6 @@ body, html, #root {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
-  overflow-y: hidden;
 }
 
 body::-webkit-scrollbar, 
@@ -135,12 +134,25 @@ html::-webkit-scrollbar,
   padding: 18px 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   overflow: hidden;
   box-sizing: border-box;
   border-radius: 28px;
   box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.10);
   animation: fadeIn 1.2s;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sidebar {
+  /* overflow-y: auto; */
+  /* scrollbar-width: none; */
+  /* -ms-overflow-style: none; */
+  overflow: visible !important;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .right-panel {
@@ -150,13 +162,14 @@ html::-webkit-scrollbar,
   padding: 18px 12px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 16px;
   overflow: hidden;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
   border-radius: 28px;
   box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.10);
   animation: fadeIn 1.2s;
-  overflow:hidden;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .calendar-panel {
@@ -179,7 +192,26 @@ html::-webkit-scrollbar,
   font-weight: bold;
   margin-bottom: 8px;
   color: #080808;
+  font-size: 1.1rem;
+  text-align: center;
 }
+
+.sidebar .section-title {
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .CompletedEventsDropdown {
+  margin-bottom: 16px;
+}
+
+/* Completed events card styling */
+.sidebar .CompletedEventsDropdown > div > div {
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
 /* BUTTON HOVER EFFECT Start*/
 .download-btn {
   width: 100%;
@@ -266,11 +298,17 @@ html::-webkit-scrollbar,
   padding: 24px;
   width: 320px;
   max-height: 80vh;
-  overflow-y: hidden; /* Changed from auto to hidden to remove scrollbar */
+  overflow-y: auto; /* Allow scrolling */
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
   gap: 16px;
+  /* Hide scrollbar for all browsers */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+#download-dialog .modal-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* Hide scrollbars on radio button group container */
@@ -1013,4 +1051,20 @@ html::-webkit-scrollbar,
     max-width: 100%;
     height: auto;
   }
+}
+
+.sidebar select[size="5"]::-webkit-scrollbar {
+  display: none;
+}
+.sidebar select[size="5"] {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.divider-line {
+  width: 100%;
+  height: 1.5px;
+  background: rgba(255,255,255,0.15);
+  margin-bottom: 12px;
+  margin-top: 0;
 }
