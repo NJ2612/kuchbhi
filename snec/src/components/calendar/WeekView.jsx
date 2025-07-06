@@ -1,4 +1,5 @@
 import React from "react";
+import EventOverflowIndicator from "./EventOverflowIndicator";
 
 // Helper to get week range (Sunday-Saturday) for a given date
 function getWeekRange(date) {
@@ -59,13 +60,9 @@ export default function WeekView({
                 <span className="weekview-day-number">{date.getDate()}</span>
               </div>
               <div className="weekview-events">
-                {dayEvents.length === 0 ? (
-                  <span className="weekview-no-events">No events</span>
-                ) : (
-                  dayEvents.map(ev => (
-                    <span key={ev.title} className="weekview-event-title">{ev.title}</span>
-                  ))
-                )}
+                <EventOverflowIndicator events={dayEvents} renderEvent={ev => (
+                  <span key={ev.title} className="weekview-event-title">{ev.title}</span>
+                )} />
               </div>
             </div>
           );

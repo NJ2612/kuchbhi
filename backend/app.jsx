@@ -233,13 +233,82 @@ app.get("/api/events", async (req, res) => {
 // POST to Add Event
 app.post("/api/events", async(req, res) => {
   try {
-      const event = new Listing(req.body);
-      await event.save();
-      res.status(201).json({ message: "Event saved successfully" });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to save event", error });
+    const { date, time, duration, location } = req.body;
+    
+    // Check for venue and time clashes
+    const existingEvents = await Listing.find({ 
+      location: location,
+      date: date 
+    });
+    
+    // Helper function to convert time string to minutes for comparison
+    const timeToMinutes = (timeStr) => {
+      if (!timeStr) return 0;
+      const time = timeStr.toLowerCase();
+      
+      // Handle "All Day" events
+      if (time.includes('all day') || time.includes('all-day')) {
+        return 0; // Start of day
+      }
+      
+      // Handle AM/PM format
+      if (time.includes('am') || time.includes('pm')) {
+        const match = time.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)/i);
+        if (match) {
+          let hours = parseInt(match[1]);
+          const minutes = match[2] ? parseInt(match[2]) : 0;
+          const period = match[3].toLowerCase();
+          
+          if (period === 'pm' && hours !== 12) hours += 12;
+          if (period === 'am' && hours === 12) hours = 0;
+          
+          return hours * 60 + minutes;
+        }
+      }
+      
+      // Handle 24-hour format (HH:MM)
+      const match = time.match(/(\d{1,2}):(\d{2})/);
+      if (match) {
+        const hours = parseInt(match[1]);
+        const minutes = parseInt(match[2]);
+        return hours * 60 + minutes;
+      }
+      
+      return 0;
+    };
+    
+    const newEventStartMinutes = timeToMinutes(time);
+    const newEventEndMinutes = newEventStartMinutes + (parseInt(duration) || 60); // Default 60 minutes if no duration
+    
+    for (const existingEvent of existingEvents) {
+      const existingEventStartMinutes = timeToMinutes(existingEvent.time);
+      const existingEventEndMinutes = existingEventStartMinutes + (existingEvent.duration || 60);
+      
+      // Check if time ranges overlap
+      const overlap = Math.max(0, Math.min(newEventEndMinutes, existingEventEndMinutes) - Math.max(newEventStartMinutes, existingEventStartMinutes));
+      
+      if (overlap > 0) {
+        return res.status(409).json({ 
+          message: "Event clash detected! There's already an event at this venue that overlaps with your event time.",
+          conflictingEvent: {
+            title: existingEvent.title,
+            time: existingEvent.time,
+            duration: existingEvent.duration,
+            location: existingEvent.location,
+            date: existingEvent.date
+          }
+        });
+      }
     }
-  });
+    
+    // If no clashes found, save the event
+    const event = new Listing(req.body);
+    await event.save();
+    res.status(201).json({ message: "Event saved successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to save event", error });
+  }
+});
 
 // Signup POST route
 app.post("/api/signup", async (req, res) => {

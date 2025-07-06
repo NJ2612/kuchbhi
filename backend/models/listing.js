@@ -18,6 +18,12 @@ const listingSchema = new Schema({
   type: String,
   required: true
   },
+  duration: {
+    type: Number,
+    required: true,
+    min: 15,
+    max: 1440
+  },
   location:{
     type:String,
     required:true
