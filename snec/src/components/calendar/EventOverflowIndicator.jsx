@@ -1,7 +1,8 @@
 import React from "react";
 const EventOverflowIndicator = ({ events, renderEvent }) => {
   if (!events || events.length === 0) return null;
-  const maxVisible = 2;
+  console.log('EventOverflowIndicator events:', events);
+  const maxVisible = 1;
   const visibleEvents = events.slice(0, maxVisible);
   const extraCount = events.length - maxVisible;
   return (

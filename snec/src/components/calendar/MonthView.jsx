@@ -1,5 +1,6 @@
 import React from "react";
 import { eventColorPalette } from "../../data/eventTypeColors";
+import EventOverflowIndicator from "./EventOverflowIndicator";
 
 // Helper to format date string (YYYY-MM-DD)
 function formatDate(year, month, day) {
@@ -51,19 +52,23 @@ export default function MonthView({
       >
         <span className="day-number">{day}</span>
         {dayEvents.length > 0 && (
-          <div className="event-dots">
-            {dayEvents.slice(0, 4).map((ev, index) => (
+          <EventOverflowIndicator
+            events={dayEvents}
+            renderEvent={ev => (
               <span
-                key={ev.title + index}
                 className={"event-dot " + ev.type}
-                style={{ backgroundColor: eventColorPalette[index % eventColorPalette.length] }}
+                style={{
+                  display: 'inline-block',
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  backgroundColor: eventColorPalette[events.indexOf(ev) % eventColorPalette.length],
+                  margin: '0 2px'
+                }}
                 title={ev.title + (ev.time ? " (" + ev.time + ")" : "")}
               />
-            ))}
-            {dayEvents.length > 4 && (
-              <div className="more-events">+{dayEvents.length - 4} more</div>
             )}
-          </div>
+          />
         )}
       </div>
     );
