@@ -88,12 +88,14 @@ export default function MonthView({
         </span>
         <button className="calendar-nav-btn" onClick={onNextMonth}>&gt;</button>
       </div>
-      <div className="calendar-days">
+      <div className="calendar-weekdays">
         {weekDays.map(day => (
           <div key={day} className="calendar-weekday">
             {day}
           </div>
         ))}
+      </div>
+      <div className="calendar-days">
         {days}
       </div>
     </div>
